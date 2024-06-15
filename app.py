@@ -20,9 +20,9 @@ from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
 # Prompts for each section
 section_prompts = [
-    "Introduction"
-    "Import Modules"
-    "Load the Data"
+    "Introduction",
+    "Import Modules",
+    "Load the Data",
     "Exploratory Data Analysis",
     "Data Preprocessing and Feature Engineering",
     "Logistic Regression",
