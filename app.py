@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -18,6 +19,8 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
 df = pd.read_csv("data.csv")
+df_combined = None
+df_plot= None
 
 description = '''
 # The next three cells create column names that will be useful later, after our df has been changed
@@ -56,21 +59,9 @@ section_prompts = [
     "Visualize with Pairplots",
     "Data Visualisation",
     "Data Preprocessing and Feature Engineering",
-    "Dimensionality Reduction with Principal Component analysis"
-    "Logistic Regression",
-    "Decision Trees",
-    "Random Forests",
-    "K Nearest Neighbours",
-    "Support Vector Machines",
-    "Evaluation Metrics for Classification Models",
-    "Handling Missing Data",
-    "Categorical Data Encoding",
-    "Feature Scaling",
-    "PCA",
-    "Pipelines and Model Persistence",
-    "Imbalanced Data Handling",
-    "Outlier Detection and Removal",
-    "Feature Engineering and Creation"
+    "Model Training "
+    "Training Model with PCA reduced data",
+  
 ]
 # Sidebar for section selection
 section = st.sidebar.selectbox("Choose a section", section_prompts)
@@ -355,7 +346,15 @@ class DimensionalityReducer:
       plt.xticks(range(1, len(self.pca.explained_variance_ratio_) + 1))
       plt.grid(True)
       plt.show()
-        
+
+# Create a list of all models
+models = {
+        'svc' : SVC(C=3),
+        'Naive Bayes': MultinomialNB(),
+        'Logistic Regression': LogisticRegression(max_iter=10000),
+        'Decision Tree': DecisionTreeClassifier(),
+        'Random Forest': RandomForestClassifier()
+    }
 # Begin displaying with streamlit
 
 if section == "Introduction":
@@ -460,7 +459,7 @@ elif section == "Data Preprocessing and Feature Engineering":
 # We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
 
 
-if section == "Data Visualisation":
+elif section == "Data Visualisation":
     encoded_data = DataExplorer(df)
     df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
     
@@ -524,195 +523,175 @@ elif section == "Dimensionality Reduction with Principal Component analysis":
     
     d_reducer.plot_scree_plot()
 
-# # **Step 6: Model Training and Deployment**
+elif section == "Model Training ":
+    encoded_data = DataExplorer(df)
+    df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
+    
+    # Remove the id column
+    df_encoded = df_encoded.drop("id", axis=1)
 
-# %% [markdown]
-# 
+    st.markdown('# **Model Training and Deployment**')
+    st.markdown('# We define a function train_and_test model that will train all model and evaluate performance metrics')
 
-# %%
+    # Function to train and test the model
+    def train_and_test_model(model, X, y):
+        # Split the data into training and testing sets
+        x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+    
+        # Train the model on the training data
+        model.fit(x_train, y_train)
+        print(f'Accuracy on training {model}:', model.score(x_train, y_train) * 100)
+    
+        # Print the accuracy on the test data
+        print(f'Accuracy on testing {model} :', model.score(x_test, y_test) * 100)
+    
+        # Generate predictions on the test data
+        y_pred = model.predict(x_test)
+    
+        # Print the classification report
+        report = classification_report(y_test, y_pred, output_dict=True)
+        # print(report.split())
+    
+        return model, report
+    # Populate all models in alist, train them iteretively
+    
+    # %%
+ 
 
-
-# %% [markdown]
-# We define a function train_and_test model that will train all model and evaluate performance metrics
-
-# %%
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
-
-
-# Function to train and test the model
-def train_and_test_model(model, X, y):
-    # Split the data into training and testing sets
-    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
-
-    # Train the model on the training data
-    model.fit(x_train, y_train)
-    print(f'Accuracy on training {model}:', model.score(x_train, y_train) * 100)
-
-    # Print the accuracy on the test data
-    print(f'Accuracy on testing {model} :', model.score(x_test, y_test) * 100)
-
-    # Generate predictions on the test data
-    y_pred = model.predict(x_test)
-
-    # Print the classification report
-    report = classification_report(y_test, y_pred, output_dict=True)
-    # print(report.split())
-
-    return model, report
-
-
-
-# %% [markdown]
-# Populate all models in alist, train them iteretively
-
-# %%
-# Create a list of all models
-models = {
-        'svc' : SVC(C=3),
-        'Naive Bayes': MultinomialNB(),
-        'Logistic Regression': LogisticRegression(max_iter=10000),
-        'Decision Tree': DecisionTreeClassifier(),
-        'Random Forest': RandomForestClassifier()
-    }
-
-# Train and test each model, and store the structured classification report
-trained_models = {}
-model_scores = {}
-for model_name, model in models.items():
-    model, report = train_and_test_model(model, df_encoded.drop("target", axis = 1), df_encoded["target"])
-    trained_models[model_name] = model
-    model_scores[model_name] = report
-    # print(f"{model_name} \n {report}\n\n")
+    # Train and test each model, and store the structured classification report
+    trained_models = {}
+    model_scores = {}
+    for model_name, model in models.items():
+        model, report = train_and_test_model(model, df_encoded.drop("target", axis = 1), df_encoded["target"])
+        trained_models[model_name] = model
+        model_scores[model_name] = report
+        # print(f"{model_name} \n {report}\n\n")
 
 
+elif section == "Training Model with PCA reduced data":
+    encoded_data = DataExplorer(df)
+    df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
+    
+    # Remove the id column
+    df_encoded = df_encoded.drop("id", axis=1)
+    
+    d_reducer = DimensionalityReducer(df_encoded, n_components=2)
+    st.markdown("Training Model with PCA reduced data")
+     
+    # Negative values in data cannot be passed to MultinomialNB (input X), so we drop it
+    trained_models_after_pca = {}
+    x = d_reducer.apply_pca()
+    y = df_encoded["target"]
+    model_scores_after_pca = {}
+    for model_name, model in models.items():
+        if model_name != 'Naive Bayes':
+            model, report = train_and_test_model(model, x, y)
+            trained_models_after_pca[model_name] = model
+            model_scores_after_pca[model_name] = report
+            # print(f"{model_name} \n {report}\n\n")
+    
+    # %%
+    print(model_scores_after_pca)
 
-# %% [markdown]
-# Train models with PCA-reduced data
-
-# %%
-print(model_scores)
-
-# %%
-# Negative values in data cannot be passed to MultinomialNB (input X), so we drop it
-trained_models_after_pca = {}
-x = d_reducer.apply_pca()
-y = df_encoded["target"]
-model_scores_after_pca = {}
-for model_name, model in models.items():
-  if model_name != 'Naive Bayes':
-    model, report = train_and_test_model(model, x, y)
-    trained_models_after_pca[model_name] = model
-    model_scores_after_pca[model_name] = report
-    # print(f"{model_name} \n {report}\n\n")
-
-# %%
-print(model_scores_after_pca)
-
-# %% [markdown]
-# Visualisations to evaluate perfomance of models before and after principal componenet analysis
-
-# %%
-# We start by tabulating model scores into a dataframe
-
-metrics_of_interest = ['precision', 'recall', 'f1-score']
-
-# Function to extract the metrics
-def extract_metrics(report_dict):
-    extracted_values = {metric: {} for metric in metrics_of_interest}
-    for model, report in report_dict.items():
-        for metric in metrics_of_interest:
-            if 'weighted avg' in report:
-                extracted_values[metric][model] = report['weighted avg'][metric]
-    return extracted_values
+elif section == "Model Evaluation":
+    st.title("Model Evaluation")
+    st.markdown('# Visualisations to evaluate perfomance of models before and after principal componenet analysis')
+    # We start by tabulating model scores into a dataframe
+    
+    metrics_of_interest = ['precision', 'recall', 'f1-score']
+    
+    # Function to extract the metrics
+    def extract_metrics(report_dict):
+        extracted_values = {metric: {} for metric in metrics_of_interest}
+        for model, report in report_dict.items():
+            for metric in metrics_of_interest:
+                if 'weighted avg' in report:
+                    extracted_values[metric][model] = report['weighted avg'][metric]
+        return extracted_values
 
 
 
-# Extract metrics for both conditions
-before_pca_metrics = extract_metrics(model_scores)
-after_pca_metrics = extract_metrics(model_scores_after_pca)
+    # Extract metrics for both conditions
+    before_pca_metrics = extract_metrics(model_scores)
+    after_pca_metrics = extract_metrics(model_scores_after_pca)
+    
+    # Create DataFrames for each condition
+    df_before_pca = pd.DataFrame(before_pca_metrics).transpose()
+    df_after_pca = pd.DataFrame(after_pca_metrics).transpose()
+    
+    # Rename columns to indicate the condition
+    df_before_pca.columns = [f'{col}_Before_PCA' for col in df_before_pca.columns]
+    df_after_pca.columns = [f'{col}_After_PCA' for col in df_after_pca.columns]
+    
+    # Combine the DataFrames
+    df_combined = pd.concat([df_before_pca, df_after_pca], axis=1)
+    
+    # Display the combined DataFrame
+    df_combined
 
-# Create DataFrames for each condition
-df_before_pca = pd.DataFrame(before_pca_metrics).transpose()
-df_after_pca = pd.DataFrame(after_pca_metrics).transpose()
+    
+    # Prepare the DataFrame for plotting
+    df_plot = df_combined.reset_index().melt(id_vars='index', var_name='Condition', value_name='Score')
+    # print(df_plot.head())
+    # print("===================================================================")
+    df_plot[['Model', 'Condition']] = df_plot['Condition'].str.split('_', n=1, expand=True)
+    print(df_plot.head())
+    print(df_plot.columns)
+   
 
-# Rename columns to indicate the condition
-df_before_pca.columns = [f'{col}_Before_PCA' for col in df_before_pca.columns]
-df_after_pca.columns = [f'{col}_After_PCA' for col in df_after_pca.columns]
+elif section == " Comparison of metrics:"
+    st.title("Comparison of metrics")
+    # Plotting
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x='index', y='Score', hue='Condition', data=df_plot, palette="viridis")
+    plt.title('Model Performance Metrics Before and After PCA')
+    plt.ylabel('Score')
+    plt.xlabel('Metric')
+    plt.ylim(0, 1)  # Assuming scores are between 0 and 1
+    plt.legend(title='Condition', loc='upper right', bbox_to_anchor=(1.1, 1))
+    st.pyplot(plt)
 
-# Combine the DataFrames
-df_combined = pd.concat([df_before_pca, df_after_pca], axis=1)
 
-# Display the combined DataFrame
-df_combined
+    # Plotting
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x='Model', y='Score', hue='Condition', data=df_plot, palette="viridis")
+    plt.title('Model Performance Metrics Before and After PCA')
+    plt.ylabel('Score')
+    plt.xlabel('Metric')
+    plt.ylim(0, 1)  # Assuming scores are between 0 and 1
+    plt.legend(title='Condition', loc='upper right', bbox_to_anchor=(1.1, 1))
+    st.pyplot(plt)
 
-# %%
-# Prepare the DataFrame for plotting
-df_plot = df_combined.reset_index().melt(id_vars='index', var_name='Condition', value_name='Score')
-print(df_plot.head())
-print("===================================================================")
-df_plot[['Model', 'Condition']] = df_plot['Condition'].str.split('_', n=1, expand=True)
-print(df_plot.head())
-print(df_plot.columns)
-# Set custom palette
-# palette = {'Before_PCA': 'lightblue', 'After_PCA': 'lightgreen'}
 
-# Plotting
-plt.figure(figsize=(12, 6))
-sns.barplot(x='index', y='Score', hue='Condition', data=df_plot, palette="viridis")
-plt.title('Model Performance Metrics Before and After PCA')
-plt.ylabel('Score')
-plt.xlabel('Metric')
-plt.ylim(0, 1)  # Assuming scores are between 0 and 1
-plt.legend(title='Condition', loc='upper right', bbox_to_anchor=(1.1, 1))
-plt.show()
+    # Determine the number of columns (models)
+    n_models = len(df_plot['Model'].unique())
+    n_cols = 3  # Number of columns you want
+    
+    # Plotting
+    g = sns.catplot(
+        data=df_plot,
+        x='index', y='Score', hue='Condition',
+        col='Model', kind='bar',
+        palette="viridis", height=6, aspect=1.2,
+        col_wrap=n_cols
+    )
+    g.fig.suptitle('Model Performance Metrics Before and After PCA', y=1.03)
+    g.set_axis_labels("Metric", "Score")
+    g.set_titles("{col_name}")
+    g.set(ylim=(0, 1))
+    g.add_legend(title='Condition', loc="lower right")
+    
+    # Adjust the layout
+    st.pyplot(plt)
 
-# %%
-# Plotting
-plt.figure(figsize=(12, 6))
-sns.barplot(x='Model', y='Score', hue='Condition', data=df_plot, palette="viridis")
-plt.title('Model Performance Metrics Before and After PCA')
-plt.ylabel('Score')
-plt.xlabel('Metric')
-plt.ylim(0, 1)  # Assuming scores are between 0 and 1
-plt.legend(title='Condition', loc='upper right', bbox_to_anchor=(1.1, 1))
-plt.show()
+else:
+    if section == "Summary":
+        st.title("Summary")
+        st.markdown('# Noted overall better model perfomance with dimensionality reduction')
 
-# %%
-# Determine the number of columns (models)
-n_models = len(df_plot['Model'].unique())
-n_cols = 3  # Number of columns you want
+st.write("THE END")
 
-# Plotting
-g = sns.catplot(
-    data=df_plot,
-    x='index', y='Score', hue='Condition',
-    col='Model', kind='bar',
-    palette="viridis", height=6, aspect=1.2,
-    col_wrap=n_cols
-)
-g.fig.suptitle('Model Performance Metrics Before and After PCA', y=1.03)
-g.set_axis_labels("Metric", "Score")
-g.set_titles("{col_name}")
-g.set(ylim=(0, 1))
-g.add_legend(title='Condition', loc="lower right")
 
-# Adjust the layout
-plt.show()
-
-# %% [markdown]
-# Noted overall better model perfomance with dimensionality reduction
-# 
-
-# %% [markdown]
-# # **Model Deployment**
 
 
 
