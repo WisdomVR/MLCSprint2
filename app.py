@@ -568,7 +568,9 @@ elif section == "Model Training ":
         model, report = train_and_test_model(model, df_encoded.drop("target", axis = 1), df_encoded["target"])
         trained_models[model_name] = model
         model_scores[model_name] = report
+       
         # print(f"{model_name} \n {report}\n\n")
+    st.write(model_scores)
 
 
 elif section == "Training Model with PCA reduced data":
@@ -591,11 +593,14 @@ elif section == "Training Model with PCA reduced data":
             model, report = train_and_test_model(model, x, y)
             trained_models_after_pca[model_name] = model
             model_scores_after_pca[model_name] = report
+            st.write(model_scores_after_pca)
             # print(f"{model_name} \n {report}\n\n")
  
-    # print(model_scores_after_pca)
+   st.write(model_scores_after_pca)
 
 elif section == "Model Evaluation":
+    st.write(model_scores)
+    st.write(model_scores_after_pca)
     st.title("Model Evaluation")
     st.markdown('# Visualisations to evaluate perfomance of models before and after principal componenet analysis')
     # We start by tabulating model scores into a dataframe
