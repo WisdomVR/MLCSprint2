@@ -19,8 +19,8 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
 df = pd.read_csv("data.csv")
-# df_combined = None
-# df_plot= None
+df_combined = None
+df_plot= None
 
 trained_models = {}
 model_scores = {}
@@ -616,7 +616,7 @@ elif section == "Model Evaluation":
     # Extract metrics for both conditions
     before_pca_metrics = extract_metrics(model_scores)
     after_pca_metrics = extract_metrics(model_scores_after_pca)
-    
+    st.write(model_scores)
     # Create DataFrames for each condition
     df_before_pca = pd.DataFrame(before_pca_metrics).transpose()
     df_after_pca = pd.DataFrame(after_pca_metrics).transpose()
