@@ -187,7 +187,7 @@ class DataExplorer:
         st.table(df_cleaned.corr())
      
 if section == "Exploratory Data Analysis":
-    st.title(Exploratory Data Analysis)
+    st.title("Exploratory Data Analysis")
     st.markdown(explore_data)
     # make an instance of DataExplorer()
     data_explorer = DataExplorer(df)
