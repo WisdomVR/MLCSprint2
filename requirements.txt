@@ -4,6 +4,6 @@ numpy
 matplotlib
 seaborn
 scikit-learn
-IPython
+IPython.display
 imblearn
 joblib
