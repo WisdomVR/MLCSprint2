@@ -20,6 +20,13 @@ from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
 df = pd.read_csv("data.csv")
 
+models = {
+        'svc' : SVC(C=3),
+        'Naive Bayes': MultinomialNB(),
+        'Logistic Regression': LogisticRegression(max_iter=10000),
+        'Decision Tree': DecisionTreeClassifier(),
+        'Random Forest': RandomForestClassifier()
+    }
 description = '''
 # The next three cells create column names that will be useful later, after our df has been changed
 '''
@@ -355,10 +362,10 @@ def train_and_test_model(model, X, y):
     
         # Train the model on the training data
         model.fit(x_train, y_train)
-        print(f'Accuracy on training {model}:', model.score(x_train, y_train) * 100)
+        st.write(f'Accuracy on training {model}:', model.score(x_train, y_train) * 100)
     
         # Print the accuracy on the test data
-        print(f'Accuracy on testing {model} :', model.score(x_test, y_test) * 100)
+        st.write(f'Accuracy on testing {model} :', model.score(x_test, y_test) * 100)
     
         # Generate predictions on the test data
         y_pred = model.predict(x_test)
@@ -369,14 +376,9 @@ def train_and_test_model(model, X, y):
     
         return model, report
 
+
 # Create a list of all models
-models = {
-        'svc' : SVC(C=3),
-        'Naive Bayes': MultinomialNB(),
-        'Logistic Regression': LogisticRegression(max_iter=10000),
-        'Decision Tree': DecisionTreeClassifier(),
-        'Random Forest': RandomForestClassifier()
-    }
+
 # Begin displaying with streamlit
 
 def introduction():
