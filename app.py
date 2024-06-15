@@ -462,6 +462,7 @@ df_encoded_outer = df_encoded
 
 
 elif section == "Data Visualisation":
+
     st.title("Data Visualisation")
     st.markdown('''# **Step 5: Some Visualisations**        
         We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. ''')
