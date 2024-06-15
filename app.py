@@ -684,19 +684,32 @@ def summary():
 
 # streamlit
 
-if section == "Introduction":introduction()
-elif section == "Import Modules":import_modules()
-elif section == "Load the Data":load_data()
-elif section == "Exploratory Data Analysis":explore_the_data()
-elif section == "Visualize with Pairplots":visualize_pairplots()
-elif section == "Data Preprocessing and Feature Engineering":preprocess()
-elif section == "Data Visualisation":data_visualisation()
-elif section == "Dimensionality Reduction with Principal Component analysis":d_reduction()
-elif section == "Model Training ":train_model()
-elif section == "Training Model with PCA reduced data":train_with_pca()
-elif section == "Model Evaluation": evaluate_model()
-elif section == " Comparison of metrics":compare_metrics()
-elif section == "Summary":summary()
+if section == "Introduction":
+    introduction()
+elif section == "Import Modules":
+    import_modules()
+elif section == "Load the Data":
+    load_data()
+elif section == "Exploratory Data Analysis":
+    explore_the_data()
+elif section == "Visualize with Pairplots":
+    visualize_pairplots()
+elif section == "Data Preprocessing and Feature Engineering":
+    preprocess()
+elif section == "Data Visualisation":
+    data_visualisation()
+elif section == "Dimensionality Reduction with Principal Component analysis":
+    d_reduction()
+elif section == "Model Training ":
+    train_model()
+elif section == "Training Model with PCA reduced data":
+    train_with_pca()
+elif section == "Model Evaluation":
+    evaluate_model()
+elif section == " Comparison of metrics":
+    compare_metrics()
+elif section == "Summary":
+    summary()
 
 
 st.write("THE END")
