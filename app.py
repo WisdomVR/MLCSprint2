@@ -21,8 +21,11 @@ from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 df = pd.read_csv("data.csv")
 df_combined = None
 df_plot= None
-model_scores = None
-model_scores_after_pca = None
+
+trained_models = {}
+model_scores = {}
+trained_models_after_pca = {}
+model_scores_after_pca = {}
 
 description = '''
 # The next three cells create column names that will be useful later, after our df has been changed
@@ -352,6 +355,27 @@ class DimensionalityReducer:
       plt.grid(True)
       plt.show()
 
+
+def train_and_test_model(model, X, y):
+        # Split the data into training and testing sets
+        x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+    
+        # Train the model on the training data
+        model.fit(x_train, y_train)
+        print(f'Accuracy on training {model}:', model.score(x_train, y_train) * 100)
+    
+        # Print the accuracy on the test data
+        print(f'Accuracy on testing {model} :', model.score(x_test, y_test) * 100)
+    
+        # Generate predictions on the test data
+        y_pred = model.predict(x_test)
+    
+        # Print the classification report
+        report = classification_report(y_test, y_pred, output_dict=True)
+        # print(report.split())
+    
+        return model, report
+
 # Create a list of all models
 models = {
         'svc' : SVC(C=3),
@@ -536,36 +560,10 @@ elif section == "Model Training ":
     df_encoded = df_encoded.drop("id", axis=1)
 
     st.markdown('# **Model Training and Deployment**')
-    st.markdown('# We define a function train_and_test model that will train all model and evaluate performance metrics')
-
-    # Function to train and test the model
-    def train_and_test_model(model, X, y):
-        # Split the data into training and testing sets
-        x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
-    
-        # Train the model on the training data
-        model.fit(x_train, y_train)
-        print(f'Accuracy on training {model}:', model.score(x_train, y_train) * 100)
-    
-        # Print the accuracy on the test data
-        print(f'Accuracy on testing {model} :', model.score(x_test, y_test) * 100)
-    
-        # Generate predictions on the test data
-        y_pred = model.predict(x_test)
-    
-        # Print the classification report
-        report = classification_report(y_test, y_pred, output_dict=True)
-        # print(report.split())
-    
-        return model, report
-    # Populate all models in alist, train them iteretively
-    
-    # %%
- 
+    st.markdown('# We define a function train_and_test model that will train all model and evaluate performance metrics') 
 
     # Train and test each model, and store the structured classification report
-    trained_models = {}
-    model_scores = {}
+    
     for model_name, model in models.items():
         model, report = train_and_test_model(model, df_encoded.drop("target", axis = 1), df_encoded["target"])
         trained_models[model_name] = model
@@ -584,10 +582,10 @@ elif section == "Training Model with PCA reduced data":
     st.markdown("Training Model with PCA reduced data")
      
     # Negative values in data cannot be passed to MultinomialNB (input X), so we drop it
-    trained_models_after_pca = {}
+    
     x = d_reducer.apply_pca()
     y = df_encoded["target"]
-    model_scores_after_pca = {}
+    
     for model_name, model in models.items():
         if model_name != 'Naive Bayes':
             model, report = train_and_test_model(model, x, y)
