@@ -1,5 +1,27 @@
-# %% [markdown]
-# <a href="https://colab.research.google.com/github/Hellen-Adua/sprint2/blob/main/sprint2_breast_cancer_dataset.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+# Prompts for each section
+section_prompts = [
+    "Introduction"
+    "Import Modules"
+    "Load the Data"
+    "Exploratory Data Analysis",
+    "Data Preprocessing and Feature Engineering",
+    "Logistic Regression",
+    "Decision Trees",
+    "Random Forests",
+    "K Nearest Neighbours",
+    "Support Vector Machines",
+    "Evaluation Metrics for Classification Models",
+    "Handling Missing Data",
+    "Categorical Data Encoding",
+    "Feature Scaling",
+    "PCA",
+    "Pipelines and Model Persistence",
+    "Imbalanced Data Handling",
+    "Outlier Detection and Removal",
+    "Feature Engineering and Creation"
+]
+# Sidebar for section selection
+section = st.sidebar.selectbox("Choose a section", section_prompts)
 
 introduction = '''
 # **Breast Cancer Wiscnosin Dataset Description**
@@ -35,8 +57,32 @@ Missing attribute values: none
 
 Class distribution: 357 benign, 212 malignant'''
 
+if section == "Introduction":
+    st.title("Introduction")
+    st.markdown(introduction)
 
-import_modules = '# ** Import Modules**' 
+if section == "Import Modules":
+    st.title("Import Modules")
+    st.markdown('# ** Import Modules**')
+    st.write(''' Imported modules are \n
+    import streamlit as st\n
+    import pandas as pd\n
+    import numpy as np\n
+    import matplotlib.pyplot as plt\n
+    import seaborn as sns\n
+    from sklearn.model_selection import train_test_split\n
+    from sklearn.linear_model import LogisticRegression\n
+    from sklearn.tree import DecisionTreeClassifier\n
+    from sklearn.ensemble import RandomForestClassifier\n
+    from sklearn.neighbors import KNeighborsClassifier\n
+    from sklearn.svm import SVC\n
+    from sklearn.preprocessing import StandardScaler, OneHotEncoder\n
+    from sklearn.impute import SimpleImputer\n
+    from sklearn.metrics import accuracy_score, classification_report, confusion_matrix\n
+    from sklearn.pipeline import Pipeline\n
+    from sklearn.decomposition import PCA\n
+    from imblearn.over_sampling import SMOTE\n
+    from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline ''')
 
 import streamlit as st
 import pandas as pd
@@ -57,8 +103,10 @@ from sklearn.decomposition import PCA
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
+if section == "Load the Data":
+    st.title("Load the Data")
+    st.write('data loaded with pd.read_csv("data.csv")')
 
-load_data = '# ** Load the Data**'
 
 df = pd.read_csv("data.csv")
 
@@ -137,36 +185,21 @@ class DataExplorer:
         df_cleaned = self.data.drop("diagnosis", axis=1)
         self.print_styled("Correlation Matrix:", size="medium")
         st.table(df_cleaned.corr())
-
-
-# make an instance of DataExplorer()
-data_explorer = DataExplorer(df)
-
-
-data_explorer.print_statistical_summary()
-
-
-data_explorer.print_dataset_information()
-
-
-data_explorer.print_dataframe_shape()
-
-
-data_explorer.print_head_of_data()
-
-
-data_explorer.print_tail_of_data()
-
-data_explorer.print_null_values_count()
-
-
-data_explorer.print_duplicated_values_count()
-
-
-data_explorer.print_unique_values_count()
-
-
-data_explorer.print_value_counts("diagnosis")
+     
+if section == "Exploratory Data Analysis":
+    st.title(Exploratory Data Analysis)
+    st.markdown(explore_data)
+    # make an instance of DataExplorer()
+    data_explorer = DataExplorer(df)
+    data_explorer.print_statistical_summary()
+    data_explorer.print_dataset_information()
+    data_explorer.print_dataframe_shape()
+    data_explorer.print_head_of_data()
+    data_explorer.print_tail_of_data()
+    data_explorer.print_null_values_count()
+    data_explorer.print_duplicated_values_count()
+    data_explorer.print_unique_values_count()
+    data_explorer.print_value_counts("diagnosis")
 
 
 
@@ -665,6 +698,6 @@ plt.show()
 # %% [markdown]
 # # **Model Deployment**
 
-st.markdown(introduction)
+
 
 
