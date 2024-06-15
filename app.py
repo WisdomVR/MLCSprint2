@@ -508,6 +508,11 @@ if section == "Data Visualisation":
 
 
 elif section == "Dimensionality Reduction with Principal Component analysis":
+    encoded_data = DataExplorer(df)
+    df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
+    
+    # Remove the id column
+    df_encoded = df_encoded.drop("id", axis=1)
     st.title("Dimensionality Reduction with Principal Component analysis")
     st.markdown('''## **Dimensionality Reduction with Principal Component analysis**
     We define a class DimensionalityReducer that will perform pca, plot the scree plot and a sctter plot of the chosen 2 principal components
@@ -516,11 +521,9 @@ elif section == "Dimensionality Reduction with Principal Component analysis":
     # We only need to call the class, and the plot new plot is shown
     d_reducer = DimensionalityReducer(df_encoded, n_components=2)
     d_reducer.plot_pca(categorical_value= df_encoded["target"])
+    
+    d_reducer.plot_scree_plot()
 
-# %%
-d_reducer.plot_scree_plot()
-
-# %% [markdown]
 # # **Step 6: Model Training and Deployment**
 
 # %% [markdown]
