@@ -79,15 +79,15 @@ class DataExplorer:
     # the function that styles the text output
     def print_styled(self, text, size="normal"):
         if size == "normal":
-            st.markdown(text)
+            st.markdown(text, unsafe_allow_html=True)
         elif size == "large":
-            st.markdown(f"# {text}")
+            st.markdown(f"# {text}", unsafe_allow_html=True)
         elif size == "medium":
-            st.markdown(f"## {text}")
+            st.markdown(f"## {text}", unsafe_allow_html=True)
         elif size == "small":
-            st.markdown(f"### {text}")
+            st.markdown(f"### {text}", unsafe_allow_html=True)
         else:
-            st.markdown(text)
+            st.markdown(text, unsafe_allow_html=True)
         
     # the rest are methods that presents outputs as tables
     def print_statistical_summary(self):
