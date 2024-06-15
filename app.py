@@ -17,6 +17,35 @@ from sklearn.decomposition import PCA
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
+df = pd.read_csv("data.csv")
+
+description = '''
+# The next three cells create column names that will be useful later, after our df has been changed
+'''
+
+
+# list all the columns
+columns = list(df.columns)
+# columns
+
+
+# create a list of all the columns of possible combinations
+mean_columns = [col for col in columns if 'mean' in col]
+se_columns = [col for col in columns if 'se' in col]
+worst_columns = [col for col in columns if 'worst' in col]
+
+# add the diagnosis column
+mean_columns.append("diagnosis")
+se_columns.append("diagnosis")
+worst_columns.append("diagnosis")
+print(mean_columns)
+print(se_columns)
+print(worst_columns)
+
+# create the data frames
+df_mean = df[mean_columns]
+df_se = df[se_columns]
+df_worst = df[worst_columns]
 
 # Prompts for each section
 section_prompts = [
@@ -76,42 +105,6 @@ All feature values are recoded with four significant digits.
 Missing attribute values: none
 
 Class distribution: 357 benign, 212 malignant'''
-
-if section == "Introduction":
-    st.title("Introduction")
-    st.markdown(introduction)
-
-if section == "Import Modules":
-    st.title("Import Modules")
-    st.markdown('# ** Import Modules**')
-    st.write(''' Imported modules are \n
-    import streamlit as st\n
-    import pandas as pd\n
-    import numpy as np\n
-    import matplotlib.pyplot as plt\n
-    import seaborn as sns\n
-    from sklearn.model_selection import train_test_split\n
-    from sklearn.linear_model import LogisticRegression\n
-    from sklearn.tree import DecisionTreeClassifier\n
-    from sklearn.ensemble import RandomForestClassifier\n
-    from sklearn.neighbors import KNeighborsClassifier\n
-    from sklearn.svm import SVC\n
-    from sklearn.preprocessing import StandardScaler, OneHotEncoder\n
-    from sklearn.impute import SimpleImputer\n
-    from sklearn.metrics import accuracy_score, classification_report, confusion_matrix\n
-    from sklearn.pipeline import Pipeline\n
-    from sklearn.decomposition import PCA\n
-    from imblearn.over_sampling import SMOTE\n
-    from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline ''')
-
-
-
-if section == "Load the Data":
-    st.title("Load the Data")
-    st.write('data loaded with pd.read_csv("data.csv")')
-
-
-df = pd.read_csv("data.csv")
 
 explore_data = '''
 # **Step 4: Exploratory Data Analysis**
@@ -188,76 +181,8 @@ class DataExplorer:
         df_cleaned = self.data.drop("diagnosis", axis=1)
         self.print_styled("Correlation Matrix:", size="medium")
         st.table(df_cleaned.corr())
-     
-if section == "Exploratory Data Analysis":
-    st.title("Exploratory Data Analysis")
-    st.markdown(explore_data)
-    # make an instance of DataExplorer()
-    data_explorer = DataExplorer(df)
-    data_explorer.print_statistical_summary()
-    data_explorer.print_dataset_information()
-    data_explorer.print_dataframe_shape()
-    data_explorer.print_head_of_data()
-    data_explorer.print_tail_of_data()
-    data_explorer.print_null_values_count()
-    data_explorer.print_duplicated_values_count()
-    data_explorer.print_unique_values_count()
-    data_explorer.print_value_counts("diagnosis")
 
 
-
-
-description = '''
-# The next three cells create column names that will be useful later, after our df has been changed
-'''
-
-
-# list all the columns
-columns = list(df.columns)
-# columns
-
-
-# create a list of all the columns of possible combinations
-mean_columns = [col for col in columns if 'mean' in col]
-se_columns = [col for col in columns if 'se' in col]
-worst_columns = [col for col in columns if 'worst' in col]
-
-# add the diagnosis column
-mean_columns.append("diagnosis")
-se_columns.append("diagnosis")
-worst_columns.append("diagnosis")
-print(mean_columns)
-print(se_columns)
-print(worst_columns)
-
-# create the data frames
-df_mean = df[mean_columns]
-df_se = df[se_columns]
-df_worst = df[worst_columns]
-
-data_processing = '''
-## **Data Preprocessing**
-Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
-
-We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
-
-#Replace M with 1 and Begnin with 0 (else 0)
-encoded_data = DataExplorer(df)
-df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
-df_encoded.head()
-
-
-
-# Remove the id column
-df_encoded = df_encoded.drop("id", axis=1)
-df_encoded.head()
-
-encoded_data.correlation()
-
-visualizations = '''
-# **Step 5: Some Visualisations**
-
-We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. '''
 
 class DataVisualizer:
     def __init__(self, data):
@@ -386,6 +311,111 @@ class DataVisualizer:
         sns.pairplot(self.data,  hue="diagnosis", corner=True,palette='viridis' )
         plt.title('Pairplot')
         st.pyplot(plt)
+        
+# Begin displaying with streamlit
+
+if section == "Introduction":
+    st.title("Introduction")
+    st.markdown(introduction)
+
+elif section == "Import Modules":
+    st.title("Import Modules")
+    st.markdown('# ** Import Modules**')
+    st.write(''' Imported modules are \n
+    import streamlit as st\n
+    import pandas as pd\n
+    import numpy as np\n
+    import matplotlib.pyplot as plt\n
+    import seaborn as sns\n
+    from sklearn.model_selection import train_test_split\n
+    from sklearn.linear_model import LogisticRegression\n
+    from sklearn.tree import DecisionTreeClassifier\n
+    from sklearn.ensemble import RandomForestClassifier\n
+    from sklearn.neighbors import KNeighborsClassifier\n
+    from sklearn.svm import SVC\n
+    from sklearn.preprocessing import StandardScaler, OneHotEncoder\n
+    from sklearn.impute import SimpleImputer\n
+    from sklearn.metrics import accuracy_score, classification_report, confusion_matrix\n
+    from sklearn.pipeline import Pipeline\n
+    from sklearn.decomposition import PCA\n
+    from imblearn.over_sampling import SMOTE\n
+    from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline ''')
+
+
+
+elif section == "Load the Data":
+    st.title("Load the Data")
+    st.write('data loaded with pd.read_csv("data.csv")')
+
+
+
+     
+elif section == "Exploratory Data Analysis":
+    st.title("Exploratory Data Analysis")
+    st.markdown(explore_data)
+    # make an instance of DataExplorer()
+    data_explorer = DataExplorer(df)
+    data_explorer.print_statistical_summary()
+    data_explorer.print_dataset_information()
+    data_explorer.print_dataframe_shape()
+    data_explorer.print_head_of_data()
+    data_explorer.print_tail_of_data()
+    data_explorer.print_null_values_count()
+    data_explorer.print_duplicated_values_count()
+    data_explorer.print_unique_values_count()
+    data_explorer.print_value_counts("diagnosis")
+
+elif section == "Visualize with Pairplots":
+    st.title("Visulize with Pairplots")
+    st.markdown('''
+    # The next three cells create column names that will be useful later, after our df has been changed
+    ''')
+    st.markdown('''Remember this statement?
+
+        ### **The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features.**
+        In order to display some visualisations, we use dimensionality reduction techniques to better understand our data.
+        Lets visualize pairplots of the different dataframes that will result from groupimg together all the means, all the standard errors and all the worst/largest dimensions.
+        Now recall the three sub dataframes? df_mean, df_se, df_worst? We use them for out pair plots''')
+    
+    # instantiate the mean visualizer
+    data_viz = DataVisualizer(df_mean)
+    data_viz.plot_pairplot(figsize=(15,15),)
+
+    # instantiate the standard error visualizer
+    data_viz = DataVisualizer(df_se)
+    data_viz.plot_pairplot(figsize=(15,15))
+    
+    # instantiate the worst dimension visualizer
+    data_viz = DataVisualizer(df_worst)
+    data_viz.plot_pairplot(figsize=(15,15))
+
+
+
+
+data_processing = '''
+## **Data Preprocessing**
+Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
+
+We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
+
+#Replace M with 1 and Begnin with 0 (else 0)
+encoded_data = DataExplorer(df)
+df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
+df_encoded.head()
+
+
+
+# Remove the id column
+df_encoded = df_encoded.drop("id", axis=1)
+df_encoded.head()
+
+encoded_data.correlation()
+
+visualizations = '''
+# **Step 5: Some Visualisations**
+
+We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. '''
+
 
 
 data_visuals = '# **Create an instance of DataVisualizer()**'
@@ -422,17 +452,8 @@ encoded_data_visualizer.plot_heatmap(figsize=(15,15), linewidths=.5, cbar_kws={"
 # %% [markdown]
 # ## Pairplots
 
-# %% [markdown]
-# Remember this statement?
-# 
-# ### **The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features.**
-# 
-# In order to display some visualisations, we use dimensionality reduction techniques to better understand our data.
-# 
-# Lets visualize pairplots of the different dataframes that will result from groupimg together all the means, all the standard errors and all the worst/largest dimensions.
 
-# %% [markdown]
-# Now recall the three sub dataframes? df_mean, df_se, df_worst? We use them for out pair plots
+
 
 # %%
 df_mean
@@ -441,20 +462,7 @@ df_mean
 # 
 
 # %%
-# instantiate the mean visualizer
-data_viz = DataVisualizer(df_mean)
-data_viz.plot_pairplot(figsize=(15,15),)
 
-
-# %%
-# instantiate the standard error visualizer
-data_viz = DataVisualizer(df_se)
-data_viz.plot_pairplot(figsize=(15,15))
-
-# %%
-# instantiate the worst dimension visualizer
-data_viz = DataVisualizer(df_worst)
-data_viz.plot_pairplot(figsize=(15,15))
 
 # %% [markdown]
 # ## **Dimensionality Reduction with Principal Component analysis**
