@@ -92,7 +92,7 @@ class DataExplorer:
     # the rest are methods that presents outputs as tables
     def print_statistical_summary(self):
         self.print_styled("Statistical summary per feature of the Breast Cancer Wisconsin Dataset:", size="medium")
-        st.table(self.data.describe().transpose().to_markdown())
+        st.table(self.data.describe().transpose())
 
     def print_dataset_information(self):
         self.print_styled("Dataset Information:", size="medium")
@@ -105,11 +105,11 @@ class DataExplorer:
 
     def print_head_of_data(self):
        self.print_styled("Head of the Data:", size="medium")
-       st.table(self.data.head().to_markdown())
+       st.table(self.data.head())
 
     def print_tail_of_data(self):
         self.print_styled("Tail of the Data:", size="medium")
-        st.table(self.data.tail().to_markdown())
+        st.table(self.data.tail())
 
     def print_null_values_count(self):
         self.print_styled("Number of Null Values:", size="medium")
@@ -121,7 +121,7 @@ class DataExplorer:
 
     def print_unique_values_count(self):
         self.print_styled("Number of Unique Values:", size="medium")
-        st.table(self.data.nunique().to_markdown())
+        st.table(self.data.nunique())
 
     def print_value_counts(self, category):
         self.print_styled("Data Distribution:", size="medium")
@@ -136,7 +136,7 @@ class DataExplorer:
     def correlation(self):
         df_cleaned = self.data.drop("diagnosis", axis=1)
         self.print_styled("Correlation Matrix:", size="medium")
-        st.table(df_cleaned.corr().to_markdown())
+        st.table(df_cleaned.corr())
 
 
 # make an instance of DataExplorer()
