@@ -452,7 +452,6 @@ elif section == "Data Preprocessing and Feature Engineering":
 
     st.write(encoded_data.correlation())
     
-df_encoded_outer = df_encoded
 
 # data_processing = '''
 # ## **Data Preprocessing**
@@ -462,7 +461,12 @@ df_encoded_outer = df_encoded
 
 
 if section == "Data Visualisation":
-
+    encoded_data = DataExplorer(df)
+    df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
+    
+    # Remove the id column
+    df_encoded = df_encoded.drop("id", axis=1)
+    
     st.title("Data Visualisation")
     st.markdown('''# **Step 5: Some Visualisations**        
         We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. ''')
@@ -473,7 +477,7 @@ if section == "Data Visualisation":
     data_visualizer.plot_countplot("diagnosis", figsize = (6,4), edgecolor='black')
     st.markdown('## Checking for Correlation')
 
-    encoded_data_visualizer = DataVisualizer(df_encoded_outer)
+    encoded_data_visualizer = DataVisualizer(df_encoded)
     encoded_data_visualizer.plot_heatmap(figsize=(15,15), linewidths=.5, cbar_kws={"shrink": .6})
 
 
