@@ -230,7 +230,7 @@ class DataVisualizer:
     def plot_line(self, x, y, **kwargs):
         sns.lineplot(data=self.data, x=x, y=y, **kwargs)
         plt.title('Line Plot')
-        st.plt
+        st.pyplot(plt)
 
     # Distribution plots
     def plot_histogram(self, column,figsize=(12,8), **kwargs):
@@ -244,7 +244,7 @@ class DataVisualizer:
         kwargs.pop('figsize', None)  # Remove figsize from kwargs
         sns.histplot(data=self.data, x=column, **kwargs)
         plt.title('Histogram')
-        st.plt
+        st.pyplot(plt)
 
     def plot_distplot(self, column,figsize=(12,8), **kwargs):
       """kwargs for distplot
@@ -258,7 +258,7 @@ class DataVisualizer:
       kwargs.pop('figsize', None)  # Remove figsize from kwargs
       sns.histplot(data=self.data, x=column, **kwargs)
       plt.title('Distplot')
-      st.plt
+      st.pyplot(plt)
 
 
     # Categorical plots
@@ -272,7 +272,7 @@ class DataVisualizer:
       kwargs.pop('figsize', None)  # Remove figsize from kwargs
       sns.countplot(data=self.data, x=column, **kwargs)
       plt.title('Countplot')
-      st.plt
+      st.pyplot(plt)
 
 
     def plot_barplot(self, x, y, figsize=(12,8), **kwargs):
@@ -284,7 +284,7 @@ class DataVisualizer:
       kwargs.pop('figsize', None)  # Remove figsize from kwargs
       sns.barplot(data=self.data, x=x, y=y, estimator=np.mean,ci='sd' **kwargs)
       plt.title('Barplot')
-      st.plt
+      st.pyplot(plt)
 
 
     def plot_scatter(self, x, y, figsize=(12,8), **kwargs):
@@ -297,7 +297,7 @@ class DataVisualizer:
         kwargs.pop('figsize', None)  # Remove figsize from kwargs
         sns.scatterplot(data=self.data, x=x, y=y, **kwargs)
         plt.title('Scatter Plot')
-        st.plt
+        st.pyplot(plt)
 
     def plot_box(self, figsize=(12,8), **kwargs):
 
@@ -309,7 +309,7 @@ class DataVisualizer:
         kwargs.pop('figsize', None)  # Remove figsize from kwargs
         sns.boxplot(data=self.data, **kwargs)
         plt.title('Box Plot')
-        st.plt
+        st.pyplot(plt)
 
     def plot_heatmap(self, figsize=(12,12), **kwargs):
         plt.figure(figsize=figsize)
@@ -325,7 +325,7 @@ class DataVisualizer:
 
         sns.heatmap(corr, mask= mask, cmap=cmap, square=True, fmt=".2f", **kwargs)
         plt.title('Heatmap')
-        st.plt
+        st.pyplot(plt)
 
     def plot_violin(self, x, y, figsize = (12,8), **kwargs):
 
@@ -338,7 +338,7 @@ class DataVisualizer:
         kwargs.pop('figsize', None)  # Remove figsize from kwargs
         sns.violinplot(data=self.data, x=x, y=y, **kwargs)
         plt.title('Violin Plot')
-        st.plt
+        st.pyplot(plt)
 
     # Comparison plots
     def plot_pairplot(self, figsize= (12,8), **kwargs):
@@ -349,7 +349,7 @@ class DataVisualizer:
         kwargs.pop('figsize', None)  # Remove figsize from kwargs
         sns.pairplot(self.data,  hue="diagnosis", corner=True,palette='viridis' )
         plt.title('Pairplot')
-        st.plt
+        st.pyplot(plt)
 
 
 data_visuals = '# **Create an instance of DataVisualizer()**'
