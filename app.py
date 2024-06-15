@@ -414,13 +414,12 @@ elif section == "Visualize with Pairplots":
     st.markdown('''
     # The next three cells create column names that will be useful later, after our df has been changed
     ''')
-    st.markdown('''Remember this statement?
-
-        ### **The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features.**
+    st.markdown('Remember this statement?')
+    st.markdown(''' ### **The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features.**
         In order to display some visualisations, we use dimensionality reduction techniques to better understand our data.
         Lets visualize pairplots of the different dataframes that will result from groupimg together all the means, all the standard errors and all the worst/largest dimensions.
         Now recall the three sub dataframes? df_mean, df_se, df_worst? We use them for out pair plots''')
-    
+           
     # instantiate the mean visualizer
     data_viz = DataVisualizer(df_mean)
     data_viz.plot_pairplot(figsize=(15,15),)
@@ -445,14 +444,16 @@ elif section == "Data Preprocessing and Feature Engineering":
     #Replace M with 1 and Begnin with 0 (else 0)
     encoded_data = DataExplorer(df)
     df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
-    st.wriet(df_encoded.head())
+    st.write(df_encoded.head())
 
     # Remove the id column
     df_encoded = df_encoded.drop("id", axis=1)
     st.write(df_encoded.head())
 
     st.write(encoded_data.correlation())
-df_encoded = df_encoded
+    
+df_encoded_outer = df_encoded
+
 # data_processing = '''
 # ## **Data Preprocessing**
 # Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
@@ -462,11 +463,8 @@ df_encoded = df_encoded
 
 elif section == "Data Visualisation":
     st.title("Data Visualisation")
-    st.markdown('''
-        # **Step 5: Some Visualisations**
-        
-        We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. '''
-        )
+    st.markdown('''# **Step 5: Some Visualisations**        
+        We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. ''')
     st.markdown('# **Create an instance of DataVisualizer()**')
 
     data_visualizer = DataVisualizer(df)
@@ -474,7 +472,7 @@ elif section == "Data Visualisation":
     data_visualizer.plot_countplot("diagnosis", figsize = (6,4), edgecolor='black')
     st.markdown('## Checking for Correlation')
 
-    encoded_data_visualizer = DataVisualizer(df_encoded)
+    encoded_data_visualizer = DataVisualizer(df_encoded_outer)
     encoded_data_visualizer.plot_heatmap(figsize=(15,15), linewidths=.5, cbar_kws={"shrink": .6})
 
 
