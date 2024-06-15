@@ -54,6 +54,7 @@ section_prompts = [
     "Load the Data",
     "Exploratory Data Analysis",
     "Visualize with Pairplots",
+    "Data Visualisation",
     "Data Preprocessing and Feature Engineering",
     "Dimensionality Reduction with Principal Component analysis"
     "Logistic Regression",
