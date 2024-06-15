@@ -639,7 +639,7 @@ elif section == "Model Evaluation":
     print(df_plot.columns)
    
 
-elif section == " Comparison of metrics:"
+elif section == " Comparison of metrics":
     st.title("Comparison of metrics")
     # Plotting
     plt.figure(figsize=(12, 6))
