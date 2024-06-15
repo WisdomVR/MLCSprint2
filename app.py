@@ -461,7 +461,7 @@ df_encoded_outer = df_encoded
 # We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
 
 
-elif section == "Data Visualisation":
+if section == "Data Visualisation":
 
     st.title("Data Visualisation")
     st.markdown('''# **Step 5: Some Visualisations**        
