@@ -1,42 +1,42 @@
 # %% [markdown]
 # <a href="https://colab.research.google.com/github/Hellen-Adua/sprint2/blob/main/sprint2_breast_cancer_dataset.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-introduction = '''# %% [markdown]
-# # **Breast Cancer Wiscnosin Dataset Description**
-# 
-# Features were computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image.
-# 
-# Attribute Information:
-# 
-# 1. ID number
-# 2. Diagnosis (M = malignant, B = benign)
-# 3. The remaining columns 3-32:
-# 
-# Ten real-valued features are computed for each cell nucleus:
-# 
-# * radius (mean of distances from center to points on the perimeter)
-# * texture (standard deviation of gray-scale values)
-# * perimeter
-# * area
-# * smoothness (local variation in radius lengths)
-# * compactness (perimeter^2 / area - 1.0)
-# * concavity (severity of concave portions of the contour)
-# * concave points (number of concave portions of the contour)
-# * symmetry
-# * fractal dimension ("coastline approximation" - 1)
-# 
-# ### **The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features.**
-# 
-# * For instance, field 3 is Mean Radius, field 13 is Radius SE, field 23 is Worst Radius.
-# 
-# All feature values are recoded with four significant digits.
-# 
-# Missing attribute values: none
-# 
-# Class distribution: 357 benign, 212 malignant'''
+introduction = '''
+# **Breast Cancer Wiscnosin Dataset Description**
+ 
+Features were computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image.
 
-# %% [markdown]
-# # ** Import Modules**
+Attribute Information:
+
+1. ID number
+ 2. Diagnosis (M = malignant, B = benign)
+ 3. The remaining columns 3-32:
+
+Ten real-valued features are computed for each cell nucleus:
+
+* radius (mean of distances from center to points on the perimeter)
+* texture (standard deviation of gray-scale values)
+* perimeter
+* area
+* smoothness (local variation in radius lengths)
+* compactness (perimeter^2 / area - 1.0)
+* concavity (severity of concave portions of the contour)
+* concave points (number of concave portions of the contour)
+ * symmetry
+ * fractal dimension ("coastline approximation" - 1)
+
+### **The mean, standard error and "worst" or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features.**
+
+* For instance, field 3 is Mean Radius, field 13 is Radius SE, field 23 is Worst Radius.
+
+All feature values are recoded with four significant digits.
+
+Missing attribute values: none
+
+Class distribution: 357 benign, 212 malignant'''
+
+
+import_modules = '# ** Import Modules**' 
 
 import streamlit as st
 import pandas as pd
@@ -56,28 +56,24 @@ from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
-import joblib
 
-# %% [markdown]
-# # ** Load the Data**
 
-# %%
-# Load data
+load_data = '# ** Load the Data**'
+
 df = pd.read_csv("data.csv")
 
-# %% [markdown]
-# # **Step 4: Exploratory Data Analysis**
-# * #### **Understanding the dataset**
-# 
-# * Checking the overall structure of the dataset and what each column.
-# 
-# Here we define a class called DataExplorer, that takes our data frame and does summary statistics on the features, including checking for null values and duplicates.
+explore_data = '''
+# **Step 4: Exploratory Data Analysis**
+* #### **Understanding the dataset**
 
-# %%
-# we use the display method form ipython to make the print output more readable
+* Checking the overall structure of the dataset and what each column.
+
+Here we define a class called DataExplorer, that takes our data frame and does summary statistics on the features, including checking for null values and duplicates.
+
+we use the display method form ipython to make the print output more readable'''
+
 from IPython.display import Markdown, display
 
-# %%
 from IPython.display import Markdown, display
 
 class DataExplorer:
@@ -140,56 +136,54 @@ class DataExplorer:
 
 
 
-# %%
+
 # make an instance of DataExplorer()
 data_explorer = DataExplorer(df)
 
-# %%
+
 data_explorer.print_statistical_summary()
 
-# %%
+
 data_explorer.print_dataset_information()
 
-# %%
+
 data_explorer.print_dataframe_shape()
 
-# %%
+
 data_explorer.print_head_of_data()
 
-# %%
+
 data_explorer.print_tail_of_data()
 
-# %%
 data_explorer.print_null_values_count()
 
-# %%
+
 data_explorer.print_duplicated_values_count()
 
-# %%
+
 data_explorer.print_unique_values_count()
 
-# %%
+
 data_explorer.print_value_counts("diagnosis")
 
-# %%
 
 
-# %% [markdown]
+
+description = '''
 # The next three cells create column names that will be useful later, after our df has been changed
+'''
 
-# %%
+
 # list all the columns
 columns = list(df.columns)
 # columns
 
 
-# %%
 # create a list of all the columns of possible combinations
 mean_columns = [col for col in columns if 'mean' in col]
 se_columns = [col for col in columns if 'se' in col]
 worst_columns = [col for col in columns if 'worst' in col]
 
-# %%
 # add the diagnosis column
 mean_columns.append("diagnosis")
 se_columns.append("diagnosis")
@@ -198,40 +192,34 @@ print(mean_columns)
 print(se_columns)
 print(worst_columns)
 
-# %%
 # create the data frames
 df_mean = df[mean_columns]
 df_se = df[se_columns]
 df_worst = df[worst_columns]
 
-# %% [markdown]
-# ## **Data Preprocessing**
-# Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
-# 
-# We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)
+data_processing = '''
+## **Data Preprocessing**
+Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
 
-# %%
+We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
+
 #Replace M with 1 and Begnin with 0 (else 0)
 encoded_data = DataExplorer(df)
 df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
 df_encoded.head()
 
 
-# %%
+
 # Remove the id column
 df_encoded = df_encoded.drop("id", axis=1)
 df_encoded.head()
 
-# %%
 encoded_data.correlation()
 
-# %% [markdown]
-# # **Step 5: Some Visualisations**
-# 
-# We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations.
-# 
+visualizations = '''
+# **Step 5: Some Visualisations**
 
-# %%
+We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. '''
 
 class DataVisualizer:
     def __init__(self, data):
@@ -362,25 +350,8 @@ class DataVisualizer:
         plt.show()
 
 
-# Example usage:
-# Assuming 'data' is your DataFrame
-# Create an instance of the class
-# data_visualization = DataVisualization(data)
+data_visuals = '# **Create an instance of DataVisualizer()**'
 
-# # Call methods to plot different types of visualizations
-# data_visualization.plot_line(x='x_column', y='y_column')
-# data_visualization.plot_bar(x='x_column', y='y_column')
-# data_visualization.plot_histogram(column='column')
-# data_visualization.plot_scatter(x='x_column', y='y_column')
-# data_visualization.plot_box()
-# data_visualization.plot_heatmap()
-# data_visualization.plot_violin(x='x_column', y='y_column')
-
-
-# %% [markdown]
-# # **Create an instance of DataVisualizer()**
-
-# %%
 data_visualizer = DataVisualizer(df)
 
 # %% [markdown]
