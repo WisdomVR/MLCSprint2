@@ -629,16 +629,16 @@ elif section == "Model Evaluation":
     df_combined = pd.concat([df_before_pca, df_after_pca], axis=1)
     
     # Display the combined DataFrame
-    df_combined
+    st.write(df_combined)
 
     
     # Prepare the DataFrame for plotting
     df_plot = df_combined.reset_index().melt(id_vars='index', var_name='Condition', value_name='Score')
-    # print(df_plot.head())
+    st.write(df_plot.head())
     # print("===================================================================")
     df_plot[['Model', 'Condition']] = df_plot['Condition'].str.split('_', n=1, expand=True)
-    print(df_plot.head())
-    print(df_plot.columns)
+    st.write(df_plot.head())
+    st.write(df_plot.columns)
    
 
 elif section == " Comparison of metrics":
