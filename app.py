@@ -1,7 +1,7 @@
 # %% [markdown]
 # <a href="https://colab.research.google.com/github/Hellen-Adua/sprint2/blob/main/sprint2_breast_cancer_dataset.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-# %% [markdown]
+introduction = f'{# %% [markdown]
 # # **Breast Cancer Wiscnosin Dataset Description**
 # 
 # Features were computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image.
@@ -33,7 +33,7 @@
 # 
 # Missing attribute values: none
 # 
-# Class distribution: 357 benign, 212 malignant
+# Class distribution: 357 benign, 212 malignant}'
 
 # %% [markdown]
 # # **Step 1: Upload the data**
@@ -705,5 +705,7 @@ plt.show()
 
 # %% [markdown]
 # # **Model Deployment**
+
+st.write(introduction)
 
 
