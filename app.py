@@ -59,7 +59,7 @@ section_prompts = [
     "Visualize with Pairplots",
     "Data Visualisation",
     "Data Preprocessing and Feature Engineering",
-    "Model Training "
+    "Model Training ",
     "Training Model with PCA reduced data",
     "Model Evaluation",
     " Comparison of metrics",
