@@ -634,10 +634,10 @@ elif section == "Model Evaluation":
     
     # Prepare the DataFrame for plotting
     df_plot = df_combined.reset_index().melt(id_vars='index', var_name='Condition', value_name='Score')
-    st.write(df_plot.head())
+    st.write(df_plot)
     # print("===================================================================")
     df_plot[['Model', 'Condition']] = df_plot['Condition'].str.split('_', n=1, expand=True)
-    st.write(df_plot.head())
+    st.write(df_plot)
     st.write(df_plot.columns)
    
 
