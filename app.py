@@ -19,8 +19,8 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
 df = pd.read_csv("data.csv")
-df_combined = None
-df_plot= None
+# df_combined = None
+# df_plot= None
 
 trained_models = {}
 model_scores = {}
