@@ -692,6 +692,6 @@ plt.show()
 # %% [markdown]
 # # **Model Deployment**
 
-st.write(introduction)
+st.markdown(introduction)
 
 
