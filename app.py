@@ -55,6 +55,7 @@ section_prompts = [
     "Exploratory Data Analysis",
     "Visualize with Pairplots",
     "Data Preprocessing and Feature Engineering",
+    "Dimensionality Reduction with Principal Component analysis"
     "Logistic Regression",
     "Decision Trees",
     "Random Forests",
@@ -450,7 +451,7 @@ elif section == "Data Preprocessing and Feature Engineering":
     st.write(df_encoded.head())
 
     st.write(encoded_data.correlation())
-
+df_encoded = df_encoded
 # data_processing = '''
 # ## **Data Preprocessing**
 # Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
@@ -507,14 +508,10 @@ elif section == "Dimensionality Reduction with Principal Component analysis":
     st.markdown('''## **Dimensionality Reduction with Principal Component analysis**
     We define a class DimensionalityReducer that will perform pca, plot the scree plot and a sctter plot of the chosen 2 principal components
     ''')
-
-
-
-
-# %%
-# We only need to call the class, and the plot new plot is shown
-d_reducer = DimensionalityReducer(df_encoded, n_components=2)
-d_reducer.plot_pca(categorical_value= df_encoded["target"])
+    
+    # We only need to call the class, and the plot new plot is shown
+    d_reducer = DimensionalityReducer(df_encoded, n_components=2)
+    d_reducer.plot_pca(categorical_value= df_encoded["target"])
 
 # %%
 d_reducer.plot_scree_plot()
