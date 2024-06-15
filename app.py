@@ -74,7 +74,7 @@ section_prompts = [
 # Sidebar for section selection
 section = st.sidebar.selectbox("Choose a section", section_prompts)
 
-introduction = '''
+introduction_info = '''
 # **Breast Cancer Wiscnosin Dataset Description**
  
 Features were computed from a digitized image of a fine needle aspirate (FNA) of a breast mass. They describe characteristics of the cell nuclei present in the image.
@@ -383,7 +383,7 @@ def train_and_test_model(model, X, y):
 
 def introduction():
     st.title("Introduction")
-    st.markdown(introduction)
+    st.markdown(introduction_info)
 
 def import_modules():
     st.title("Import Modules")
