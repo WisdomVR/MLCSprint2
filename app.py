@@ -596,7 +596,7 @@ elif section == "Training Model with PCA reduced data":
             st.write(model_scores_after_pca)
             # print(f"{model_name} \n {report}\n\n")
  
-   st.write(model_scores_after_pca)
+        st.write(model_scores_after_pca)
 
 elif section == "Model Evaluation":
     st.write(model_scores)
