@@ -53,6 +53,7 @@ section_prompts = [
     "Import Modules",
     "Load the Data",
     "Exploratory Data Analysis",
+    "Visualize with Pairplots",
     "Data Preprocessing and Feature Engineering",
     "Logistic Regression",
     "Decision Trees",
@@ -311,6 +312,47 @@ class DataVisualizer:
         sns.pairplot(self.data,  hue="diagnosis", corner=True,palette='viridis' )
         plt.title('Pairplot')
         st.pyplot(plt)
+
+
+
+class DimensionalityReducer:
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.decomposition import PCA
+
+    def __init__(self, data, n_components, target=None):
+        self.scaler = StandardScaler()
+        self.data = self.scaler.fit_transform(data)
+        self.n_components = n_components
+        self.target = target
+        self.pca = PCA(n_components=self.n_components)
+        self.pca_result = self.pca.fit_transform(self.data)
+
+    def apply_pca(self):
+
+        pca_df = pd.DataFrame(data=self.pca_result, columns=[f'PC{i+1}' for i in range(self.n_components)])
+        print(f'Explained variance by components: {self.pca.explained_variance_ratio_}')
+        return pca_df
+
+    def plot_pca(self, categorical_value = None):
+        pca_df = self.apply_pca()
+        plt.figure(figsize=(8, 6))
+        sns.scatterplot(x='PC1', y='PC2', data=pca_df, c= categorical_value)
+        plt.title('PCA Result')
+        plt.xlabel('Principal Component 1')
+        plt.ylabel('Principal Component 2')
+        plt.show()
+
+    def plot_scree_plot(self):
+      # Create a scree plot
+      plt.figure(figsize=(10, 6))
+      plt.bar(range(1, len(self.pca.explained_variance_ratio_) + 1), self.pca.explained_variance_ratio_, alpha=0.6, color='b')
+      plt.plot(range(1, len(self.pca.explained_variance_ratio_) + 1), self.pca.explained_variance_ratio_, 'o-', color='b')
+      plt.title('Scree Plot')
+      plt.xlabel('Principal Component')
+      plt.ylabel('Explained Variance Ratio')
+      plt.xticks(range(1, len(self.pca.explained_variance_ratio_) + 1))
+      plt.grid(True)
+      plt.show()
         
 # Begin displaying with streamlit
 
@@ -390,50 +432,57 @@ elif section == "Visualize with Pairplots":
     data_viz.plot_pairplot(figsize=(15,15))
 
 
+elif section == "Data Preprocessing and Feature Engineering":
+    st.title("Data Preprocessing and Feature Engineering")
+    st.markdown('''
+        ## **Data Preprocessing**
+        Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
+        
+        We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)''')
+
+    #Replace M with 1 and Begnin with 0 (else 0)
+    encoded_data = DataExplorer(df)
+    df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
+    st.wriet(df_encoded.head())
+
+    # Remove the id column
+    df_encoded = df_encoded.drop("id", axis=1)
+    st.write(df_encoded.head())
+
+    st.write(encoded_data.correlation())
+
+# data_processing = '''
+# ## **Data Preprocessing**
+# Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
+
+# We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
 
 
-data_processing = '''
-## **Data Preprocessing**
-Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
+elif section == "Data Visualisation":
+    st.title("Data Visualisation")
+    st.markdown('''
+        # **Step 5: Some Visualisations**
+        
+        We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. '''
+        )
+    st.markdown('# **Create an instance of DataVisualizer()**')
 
-We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
+    data_visualizer = DataVisualizer(df)
+    st.markdown('## Distribution of cases as Malignant vs Benign')
+    data_visualizer.plot_countplot("diagnosis", figsize = (6,4), edgecolor='black')
+    st.markdown('## Checking for Correlation')
 
-#Replace M with 1 and Begnin with 0 (else 0)
-encoded_data = DataExplorer(df)
-df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
-df_encoded.head()
-
-
-
-# Remove the id column
-df_encoded = df_encoded.drop("id", axis=1)
-df_encoded.head()
-
-encoded_data.correlation()
-
-visualizations = '''
-# **Step 5: Some Visualisations**
-
-We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. '''
+    encoded_data_visualizer = DataVisualizer(df_encoded)
+    encoded_data_visualizer.plot_heatmap(figsize=(15,15), linewidths=.5, cbar_kws={"shrink": .6})
 
 
 
-data_visuals = '# **Create an instance of DataVisualizer()**'
+# visualizations = '''
+# # **Step 5: Some Visualisations**
 
-data_visualizer = DataVisualizer(df)
+# We define a class DataVIsualizer that takes our dataframe and performs some basic visualisations. '''
+# data_visuals = '# **Create an instance of DataVisualizer()**'
 
-# %% [markdown]
-# ## Distribution of cases as Malignant vs Benign
-
-# %%
-data_visualizer.plot_countplot("diagnosis", figsize = (6,4), edgecolor='black',)
-
-# %% [markdown]
-# ## Checking for Correlation
-
-# %%
-encoded_data_visualizer = DataVisualizer(df_encoded)
-encoded_data_visualizer.plot_heatmap(figsize=(15,15), linewidths=.5, cbar_kws={"shrink": .6})
 
 
 # %% [markdown]
@@ -449,65 +498,17 @@ encoded_data_visualizer.plot_heatmap(figsize=(15,15), linewidths=.5, cbar_kws={"
 # 
 # Fractural_dimension_mean and fractural_dimension_worst are correlated by value 0.77
 
-# %% [markdown]
 # ## Pairplots
+# df_mean
 
 
+elif section == "Dimensionality Reduction with Principal Component analysis":
+    st.title("Dimensionality Reduction with Principal Component analysis")
+    st.markdown('''## **Dimensionality Reduction with Principal Component analysis**
+    We define a class DimensionalityReducer that will perform pca, plot the scree plot and a sctter plot of the chosen 2 principal components
+    ''')
 
 
-# %%
-df_mean
-
-# %% [markdown]
-# 
-
-# %%
-
-
-# %% [markdown]
-# ## **Dimensionality Reduction with Principal Component analysis**
-# 
-# We define a class DimensionalityReducer that will perform pca, plot the scree plot and a sctter plot of the chosen 2 principal components
-
-# %%
-class DimensionalityReducer:
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.decomposition import PCA
-
-    def __init__(self, data, n_components, target=None):
-        self.scaler = StandardScaler()
-        self.data = self.scaler.fit_transform(data)
-        self.n_components = n_components
-        self.target = target
-        self.pca = PCA(n_components=self.n_components)
-        self.pca_result = self.pca.fit_transform(self.data)
-
-    def apply_pca(self):
-
-        pca_df = pd.DataFrame(data=self.pca_result, columns=[f'PC{i+1}' for i in range(self.n_components)])
-        print(f'Explained variance by components: {self.pca.explained_variance_ratio_}')
-        return pca_df
-
-    def plot_pca(self, categorical_value = None):
-        pca_df = self.apply_pca()
-        plt.figure(figsize=(8, 6))
-        sns.scatterplot(x='PC1', y='PC2', data=pca_df, c= categorical_value)
-        plt.title('PCA Result')
-        plt.xlabel('Principal Component 1')
-        plt.ylabel('Principal Component 2')
-        plt.show()
-
-    def plot_scree_plot(self):
-      # Create a scree plot
-      plt.figure(figsize=(10, 6))
-      plt.bar(range(1, len(self.pca.explained_variance_ratio_) + 1), self.pca.explained_variance_ratio_, alpha=0.6, color='b')
-      plt.plot(range(1, len(self.pca.explained_variance_ratio_) + 1), self.pca.explained_variance_ratio_, 'o-', color='b')
-      plt.title('Scree Plot')
-      plt.xlabel('Principal Component')
-      plt.ylabel('Explained Variance Ratio')
-      plt.xticks(range(1, len(self.pca.explained_variance_ratio_) + 1))
-      plt.grid(True)
-      plt.show()
 
 
 # %%
