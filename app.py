@@ -61,6 +61,9 @@ section_prompts = [
     "Data Preprocessing and Feature Engineering",
     "Model Training "
     "Training Model with PCA reduced data",
+    "Model Evaluation",
+    " Comparison of metrics",
+    "Summary"
   
 ]
 # Sidebar for section selection
