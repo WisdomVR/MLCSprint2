@@ -386,11 +386,11 @@ models = {
     }
 # Begin displaying with streamlit
 
-if section == "Introduction":
+def introduction():
     st.title("Introduction")
     st.markdown(introduction)
 
-elif section == "Import Modules":
+def import_modules():
     st.title("Import Modules")
     st.markdown('# ** Import Modules**')
     st.write(''' Imported modules are \n
@@ -414,15 +414,13 @@ elif section == "Import Modules":
     from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline ''')
 
 
-
-elif section == "Load the Data":
+def load_data():
     st.title("Load the Data")
     st.write('data loaded with pd.read_csv("data.csv")')
 
 
 
-     
-elif section == "Exploratory Data Analysis":
+def explore_the_data():
     st.title("Exploratory Data Analysis")
     st.markdown(explore_data)
     # make an instance of DataExplorer()
@@ -437,7 +435,7 @@ elif section == "Exploratory Data Analysis":
     data_explorer.print_unique_values_count()
     data_explorer.print_value_counts("diagnosis")
 
-elif section == "Visualize with Pairplots":
+def visualize_pairplots():
     st.title("Visulize with Pairplots")
     st.markdown('''
     # The next three cells create column names that will be useful later, after our df has been changed
@@ -460,11 +458,10 @@ elif section == "Visualize with Pairplots":
     data_viz = DataVisualizer(df_worst)
     data_viz.plot_pairplot(figsize=(15,15))
 
-
-elif section == "Data Preprocessing and Feature Engineering":
+def preprocess():
     st.title("Data Preprocessing and Feature Engineering")
     st.markdown('''
-        ## **Data Preprocessing**
+        ### **Data Preprocessing**
         Our dataframe has no null values, no duplicates. so we proceed to encode the diagnosis column with numerical values.
         
         We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)''')
@@ -479,7 +476,7 @@ elif section == "Data Preprocessing and Feature Engineering":
     st.write(df_encoded.head())
 
     st.write(encoded_data.correlation())
-    
+    return df_encoded
 
 # data_processing = '''
 # ## **Data Preprocessing**
@@ -487,8 +484,7 @@ elif section == "Data Preprocessing and Feature Engineering":
 
 # We replace M with 1 and B with 0. (Label Ecoding/ Binary Encoding)'''
 
-
-elif section == "Data Visualisation":
+def data_visualisation():
     encoded_data = DataExplorer(df)
     df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
     
@@ -534,8 +530,7 @@ elif section == "Data Visualisation":
 # ## Pairplots
 # df_mean
 
-
-elif section == "Dimensionality Reduction with Principal Component analysis":
+def d_reduction():
     encoded_data = DataExplorer(df)
     df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
     
@@ -551,8 +546,9 @@ elif section == "Dimensionality Reduction with Principal Component analysis":
     d_reducer.plot_pca(categorical_value= df_encoded["target"])
     
     d_reducer.plot_scree_plot()
+    return d_reducer
 
-elif section == "Model Training ":
+def train_model():
     encoded_data = DataExplorer(df)
     df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
     
@@ -570,10 +566,9 @@ elif section == "Model Training ":
         model_scores[model_name] = report
        
         # print(f"{model_name} \n {report}\n\n")
-    st.write(model_scores)
+    return model_scores
 
-
-elif section == "Training Model with PCA reduced data":
+def train_with_pca():  
     encoded_data = DataExplorer(df)
     df_encoded = encoded_data.df_encoded().drop("diagnosis", axis=1)
     
@@ -594,11 +589,10 @@ elif section == "Training Model with PCA reduced data":
             trained_models_after_pca[model_name] = model
             model_scores_after_pca[model_name] = report
             st.write(model_scores_after_pca)
-            # print(f"{model_name} \n {report}\n\n")
- 
-        st.write(model_scores_after_pca)
 
-elif section == "Model Evaluation":
+    return model_scores_after_pca
+
+def evaluate_model():
     st.write(model_scores)
     st.write(model_scores_after_pca)
     st.title("Model Evaluation")
@@ -644,9 +638,9 @@ elif section == "Model Evaluation":
     df_plot[['Model', 'Condition']] = df_plot['Condition'].str.split('_', n=1, expand=True)
     st.write(df_plot)
     st.write(df_plot.columns)
+    return df_plot
    
-
-elif section == " Comparison of metrics":
+def compare_metrics():
     st.title("Comparison of metrics")
     # Plotting
     plt.figure(figsize=(12, 6))
@@ -691,10 +685,26 @@ elif section == " Comparison of metrics":
     # Adjust the layout
     st.pyplot(plt)
 
-else:
-    if section == "Summary":
-        st.title("Summary")
-        st.markdown('# Noted overall better model perfomance with dimensionality reduction')
+def summary():
+    st.title("Summary")
+    st.markdown('# Noted overall better model perfomance with dimensionality reduction')
+
+# streamlit
+
+if section == "Introduction":introduction()
+elif section == "Import Modules":import_modules()
+elif section == "Load the Data":load_data()
+elif section == "Exploratory Data Analysis":explore_the_data()
+elif section == "Visualize with Pairplots":visualize_pairplots()
+elif section == "Data Preprocessing and Feature Engineering":preprocess()
+elif section == "Data Visualisation":data_visualisation()
+elif section == "Dimensionality Reduction with Principal Component analysis":d_reduction()
+elif section == "Model Training ":train_model()
+elif section == "Training Model with PCA reduced data":train_with_pca()
+elif section == "Model Evaluation": evaluate_model()
+elif section == " Comparison of metrics":compare_metrics()
+elif section == "Summary":summary()
+
 
 st.write("THE END")
 
