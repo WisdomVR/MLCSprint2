@@ -19,13 +19,13 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 
 df = pd.read_csv("data.csv")
-# df_combined = None
-# df_plot= None
+df_combined = None
+df_plot= None
 
-# trained_models = {}
-# model_scores = {}
-# trained_models_after_pca = {}
-# model_scores_after_pca = {}
+trained_models = None
+model_scores = None
+trained_models_after_pca = None
+model_scores_after_pca = None
 
 description = '''
 # The next three cells create column names that will be useful later, after our df has been changed
