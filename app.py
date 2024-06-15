@@ -36,23 +36,9 @@ introduction = '''# %% [markdown]
 # Class distribution: 357 benign, 212 malignant'''
 
 # %% [markdown]
-# # **Step 1: Upload the data**
+# # ** Import Modules**
 
-# %%
-from google.colab import drive
-
-# Mount Google Drive
-drive.mount('/content/drive', force_remount=True)
-
-# Define file path in shared Google Drive
-csv_file_path = '/content/drive/MyDrive/data.csv'
-
-# %% [markdown]
-# # **Step 2: Import Modules**
-# Reading the CSV file into a pandas DataFrame.
-
-# %%
-# import streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -73,11 +59,11 @@ from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 import joblib
 
 # %% [markdown]
-# # **Step 3: Load the Data**
+# # ** Load the Data**
 
 # %%
 # Load data
-df = pd.read_csv(csv_file_path)
+df = pd.read_csv("data.csv")
 
 # %% [markdown]
 # # **Step 4: Exploratory Data Analysis**
