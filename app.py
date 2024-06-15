@@ -72,42 +72,47 @@ Here we define a class called DataExplorer, that takes our data frame and does s
 
 we use the display method form ipython to make the print output more readable'''
 
-from IPython.display import Markdown, display
-
-from IPython.display import Markdown, display
-
 class DataExplorer:
     def __init__(self, data):
         self.data = data
 
     # the function that styles the text output
     def print_styled(self, text, size="normal"):
-        display(Markdown(f"<{size}>{text}</{size}>"))
-
+        if size == "normal":
+            st.markdown(text)
+        elif size == "large":
+            st.markdown(f"# {text}")
+        elif size == "medium":
+            st.markdown(f"## {text}")
+        elif size == "small":
+            st.markdown(f"### {text}")
+        else:
+            st.markdown(text)
+        
     # the rest are methods that presents outputs as tables
     def print_statistical_summary(self):
-        self.print_styled("Statistical summary per feature of the Breast Cancer Wisconsin Dataset:", size="h2")
-        display(Markdown(self.data.describe().transpose().to_markdown()))
+        self.print_styled("Statistical summary per feature of the Breast Cancer Wisconsin Dataset:", size="medium")
+        st.table(self.data.describe().transpose().to_markdown())
 
     def print_dataset_information(self):
-        self.print_styled("Dataset Information:", size="h2")
-        self.print_styled("There are 569 entries and 32 columns. Each column has no null value.", size="h3")
+        self.print_styled("Dataset Information:", size="medium")
+        self.print_styled("There are 569 entries and 32 columns. Each column has no null value.", size="small")
         print(self.data.info())
 
     def print_dataframe_shape(self):
-        self.print_styled("Shape of the Dataframe:", size="h2")
+        self.print_styled("Shape of the Dataframe:", size="medium")
         print(self.data.shape)
 
     def print_head_of_data(self):
-        self.print_styled("Head of the Data:", size="h2")
-        display(Markdown(self.data.head().to_markdown()))
+        self.print_styled("Head of the Data:", size="medium")
+       st.table(self.data.head().to_markdown())
 
     def print_tail_of_data(self):
-        self.print_styled("Tail of the Data:", size="h2")
-        display(Markdown(self.data.tail().to_markdown()))
+        self.print_styled("Tail of the Data:", size="medium")
+        st.table(self.data.tail().to_markdown())
 
     def print_null_values_count(self):
-        self.print_styled("Number of Null Values:", size="h2")
+        self.print_styled("Number of Null Values:", size="medium")
         print(self.data.isnull().sum())
 
     def print_duplicated_values_count(self):
@@ -115,26 +120,23 @@ class DataExplorer:
         print(self.data.duplicated().sum())
 
     def print_unique_values_count(self):
-        self.print_styled("Number of Unique Values:", size="h2")
-        display(Markdown(self.data.nunique().to_markdown()))
+        self.print_styled("Number of Unique Values:", size="medium")
+        st.table(self.data.nunique().to_markdown())
 
     def print_value_counts(self, category):
-        self.print_styled("Data Distribution:", size="h2")
+        self.print_styled("Data Distribution:", size="medium")
         print(self.data[category].value_counts())
 
     def df_encoded(self):
-        self.print_styled("Encoded Data:", size="h2")
-        self.print_styled("Malignant = 1, Benign = 0", size ="h4")
+        self.print_styled("Encoded Data:", size="medium")
+        self.print_styled("Malignant = 1, Benign = 0", size ="small")
         self.data["target"]= self.data["diagnosis"].map(lambda row: 1 if row=='M' else 0)
         return self.data
 
     def correlation(self):
         df_cleaned = self.data.drop("diagnosis", axis=1)
-        self.print_styled("Correlation Matrix:", size="h2")
-        display(Markdown(df_cleaned.corr().to_markdown()))
-
-
-
+        self.print_styled("Correlation Matrix:", size="medium")
+        st.table(df_cleaned.corr().to_markdown())
 
 
 # make an instance of DataExplorer()
