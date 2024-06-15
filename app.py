@@ -21,6 +21,8 @@ from imblearn.pipeline import make_pipeline as imbalanced_make_pipeline
 df = pd.read_csv("data.csv")
 df_combined = None
 df_plot= None
+model_scores = None
+model_scores_after_pca = None
 
 description = '''
 # The next three cells create column names that will be useful later, after our df has been changed
@@ -592,9 +594,8 @@ elif section == "Training Model with PCA reduced data":
             trained_models_after_pca[model_name] = model
             model_scores_after_pca[model_name] = report
             # print(f"{model_name} \n {report}\n\n")
-    
-    # %%
-    print(model_scores_after_pca)
+ 
+    # print(model_scores_after_pca)
 
 elif section == "Model Evaluation":
     st.title("Model Evaluation")
