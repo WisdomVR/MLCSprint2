@@ -104,7 +104,7 @@ class DataExplorer:
         print(self.data.shape)
 
     def print_head_of_data(self):
-        self.print_styled("Head of the Data:", size="medium")
+       self.print_styled("Head of the Data:", size="medium")
        st.table(self.data.head().to_markdown())
 
     def print_tail_of_data(self):
